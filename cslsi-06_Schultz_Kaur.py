@@ -4,7 +4,6 @@ Created on Sat Nov 18 15:28:01 2017
 
 @author: Bruce Schultz and Ravinder Kaur
 """
-import os
 import sys
 import csv
 from PyQt5.QtWidgets import QWidget, QLabel, QLineEdit, QTextEdit, QListView, QListWidget, QPushButton, QSpinBox, QRadioButton, QButtonGroup
