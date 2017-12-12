@@ -51,7 +51,7 @@ class BinaryTree:
                     self.rightChild.insert(newVal)
                 
     def search(self, val):
-        '''Search tree for a noce with a matching key to input value'''
+        '''Search tree for a node with a matching key and return True/False'''
         if val < self.root:
             if self.leftChild is None:
                 return "Element is not in tree"
@@ -64,6 +64,7 @@ class BinaryTree:
             return True
             
     #TODO Finish delete function
+    # How to look at node before??
     def delete(self, val):
         if self.search(val) is True:
             if self.numChildren(val) == 0:
@@ -102,20 +103,5 @@ for i in range(len(values)):
     else:
         root.insert(values[i])
 
-#root = BinaryTree(3)
-#root.insert(5)
-#root.insert(2)
-#r = root.getRoot()
-
 root.visualize('roottest.gv')
 
-#l = root.buildEdgesLeft()
-#
-#for i in range(len(l)):
-#    l[i] = str(l[i])
-#print(type(l[0]))
-#o = [(l[i],l[i+1]) for i in range(0,len(l),2)]
-
-#graph = Digraph()
-#graph.edge(('3', '5'))
-#graph.view()
