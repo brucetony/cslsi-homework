@@ -71,7 +71,7 @@ class BinaryTree:
 
     
     def buildEdges(self):
-        '''Called to create list of nodes for arrows to be draw between.
+        '''Called to create list of nodes for arrows to be drawn between.
         Output is list and each set of 2 should be connected by an arrow'''
         if self.leftChild is None and self.rightChild is None: #Base case
             return []
@@ -82,16 +82,6 @@ class BinaryTree:
         elif (self.leftChild is not None) and (self.rightChild is not None):
             return [self.root, self.leftChild.root, self.root, self.rightChild.root] \
                     + self.leftChild.buildEdges() + self.rightChild.buildEdges()
-    
-#    def buildEdgesLeft(self):
-#        if self.leftChild is None:
-#            return []
-#        return [self.root, self.leftChild.root] + self.leftChild.buildEdgesLeft()
-#    
-#    def buildEdgesRight(self):
-#        if self.rightChild is None:
-#            return []
-#        return [self.root, self.rightChild.root] + self.rightChild.buildEdgesRight()
     
     #TODO Ensure arrows point correctly
         # Maybe add /None/ leaf?
