@@ -14,6 +14,9 @@ class BinaryTree:
         self.leftChild = None
         self.rightChild = None
         
+#    def __str__(self):
+#        return "[%s, %s, %s]" % (self.leftChild, str(self.root), self.rightChild)
+    
     def __repr__(self):
         return str(self.root)
     
@@ -54,22 +57,69 @@ class BinaryTree:
         '''Search tree for a node with a matching key and return True/False'''
         if val < self.root:
             if self.leftChild is None:
-                return "Element is not in tree"
+                return None
             return self.leftChild.search(val) #Recursively search left sides
         elif val > self.root:
             if self.rightChild is None:
-                return "Element is not in tree"
+                return None
             return self.rightChild.search(val) #Recursively search right sides
         else:
-            return True
+            return self
             
+    def parent(self, val):
+        '''Find the parent node of input value, if value is not in tree, \
+        then it tells you.'''
+        if self.search(val) is None:
+            return "Node is not in tree"
+        # First check if either child node has the value, \
+        #   if not then search recursively in the given direction (left/right)
+        if self.leftChild != None and self.leftChild.root == val:
+            return self
+        elif self.rightChild != None and self.rightChild.root == val:
+            return self
+        elif val < self.root:
+            return self.leftChild.parent(val)
+        elif val > self.root:
+            return self.rightChild.parent(val)
+    
     #TODO Finish delete function
-    # How to look at node before??
     def delete(self, val):
-        if self.search(val) is True:
-            if self.numChildren(val) == 0:
-                return self.root
-
+        '''Deletes and redirects node using one of three cases'''
+        if self.search(val) is None:
+            return "Node is not in tree"
+        else:
+            # Case 1: Node is a leaf :: set parent pointer to None
+            if self.search(val).numChildren() == 0:
+                if self.search(val).root < self.parent(val).root:
+                    self.parent(val).leftChild = None
+                elif self.search(val).root > self.parent(val).root:
+                    self.parent(val).rightChild = None
+            
+            # Case 2: Node has exactly one child :: delete node and \ 
+            #         set node's parent to point at child
+            elif self.search(val).numChildren() == 1:
+                if self.search(val).root < self.parent(val).root:
+                    if self.search(val).leftChild is None:
+                        self.parent(val).leftChild = self.search(val).rightChild
+                    else:
+                        self.parent(val).leftChild = self.search(val).leftChild
+                elif self.search(val).root > self.parent(val).root:
+                    if self.search(val).leftChild is None:
+                        self.parent(val).rightChild = self.search(val).rightChild
+                    else:
+                        self.parent(val).rightChild = self.search(val).leftChild
+            
+            #Case 3: Node has 2+ children
+            elif self.search(val).numChildren() == 2:
+                nextNode = self.search(val).rightChild
+                while nextNode.leftChild: #Loop until no more left child
+                    parent = nextNode #Need to remamber the parent data
+                    nextNode = nextNode.leftChild
+                self.search(val).root = nextNode.root #Exchange values
+                if parent.leftChild == nextNode: #Point the children correctly
+                    parent.leftChild = nextNode.rightChild
+                else:
+                    parent.rightChild = nextNode.rightChild
     
     def buildEdges(self):
         '''Called to create list of nodes for arrows to be drawn between.
@@ -103,5 +153,5 @@ for i in range(len(values)):
     else:
         root.insert(values[i])
 
-root.visualize('roottest.gv')
 
+#root.visualize('roottest.gv')
