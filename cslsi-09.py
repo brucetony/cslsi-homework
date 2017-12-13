@@ -11,14 +11,11 @@ class BinaryTree:
         self.root = root #Each child will be root of new tree
         self.leftChild = None
         self.rightChild = None
-        
-#    def __str__(self):
-#        return "[%s, %s, %s]" % (self.leftChild, str(self.root), self.rightChild)
     
     def __repr__(self):
         return str(self.root)
     
-    def getRoot(self):
+    def getKey(self):
         return self.root
     
     def getLeft(self):
@@ -52,7 +49,7 @@ class BinaryTree:
                     self.rightChild.insert(newVal)
                 
     def search(self, val):
-        '''Search tree for a node with a matching key and return True/False'''
+        '''Search tree for a node with a matching key and return value or None'''
         if val < self.root:
             if self.leftChild is None:
                 return None
@@ -98,14 +95,14 @@ class BinaryTree:
             elif self.search(val).numChildren() == 1:
                 if self.search(val).root < self.parent(val).root:
                     if self.search(val).leftChild is None:
-                        self.parent(val).leftChild=self.search(val).rightChild
+                        self.parent(val).leftChild = self.search(val).rightChild
                     else:
                         self.parent(val).leftChild = self.search(val).leftChild
                 elif self.search(val).root > self.parent(val).root:
                     if self.search(val).leftChild is None:
-                        self.parent(val).rightChild=self.search(val).rightChild
+                        self.parent(val).rightChild = self.search(val).rightChild
                     else:
-                        self.parent(val).rightChild=self.search(val).leftChild
+                        self.parent(val).rightChild = self.search(val).leftChild
             
             #Case 3: Node has 2+ children
             elif self.search(val).numChildren() == 2:
@@ -120,7 +117,9 @@ class BinaryTree:
                     parent.rightChild = nextNode.rightChild
     
     def traverse(self, order):
-        if self.root != None:
+        '''Method to print values in tree depending on order requested'''
+        
+        if self.root != None: #Obv can't return value if None exists
             if order == "preorder":
                 print(self.root)
                 if self.leftChild:
@@ -139,9 +138,9 @@ class BinaryTree:
                 if self.rightChild:
                     self.rightChild.traverse("postorder")
                 print(self.root)
-            else:
+            else: #In case someone puts in wrong input
                 raise ValueError("Order must be either preorder, \
-                                 inorder, or postorder!")
+inorder, or postorder!")
     
     def buildEdges(self):
         '''Called to create list of nodes for arrows to be drawn between.
@@ -159,6 +158,8 @@ class BinaryTree:
     #TODO Ensure arrows point correctly
         # Maybe add /None/ leaf?
     def visualize(self, outputPath):
+        '''Method that uses graphviz/Digraph to make a visual representation\
+        of our BST. Arrow are constructed using the buildEdges method.'''
         graph = Digraph(filename=outputPath) #Initiate the graphviz obj
         edges = self.buildEdges()
         for i in range(len(edges)): #Graphviz likes strings for edge names
@@ -167,6 +168,11 @@ class BinaryTree:
             graph.edge(edges[i], edges[i+1]) # E.g. [A, B, C, D] -> A->B, C->D
         graph.view()
 
+    def balance(self, root): #Need to write this, probably using the preorder traverse method
+        pass
+    
+    def rotation(tree, node, direction): #No idea so far
+        pass
     
 values = [10, 5, 7, 1, 15, 3, 6, 9, 8, 11]
 for i in range(len(values)):
@@ -175,5 +181,5 @@ for i in range(len(values)):
     else:
         root.insert(values[i])
 
-root.traverse("preorder")
+#root.traverse("inorder")
 #root.visualize('roottest.gv')
