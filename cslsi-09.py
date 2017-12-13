@@ -168,6 +168,16 @@ inorder, or postorder!")
             graph.edge(edges[i], edges[i+1]) # E.g. [A, B, C, D] -> A->B, C->D
         graph.view()
 
+    def height(self): # Used in the checkBalance method
+        '''Find height of tree'''
+        pass
+    
+    def checkBalance(self): #Need function to determine tree height
+        '''Check if every node is balanced or not by taking the difference \
+        of the left tree height and right tree height: \
+        bal(root) = leftChild.height() - rightChild.height() '''
+        pass
+    
     def balance(self, root): #Need to write this, probably using the preorder traverse method
         pass
     
