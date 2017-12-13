@@ -168,17 +168,23 @@ inorder, or postorder!")
             graph.edge(edges[i], edges[i+1]) # E.g. [A, B, C, D] -> A->B, C->D
         graph.view()
 
-    def height(self): # Used in the checkBalance method
-        '''Find height of tree'''
-        pass
-    
-    def checkBalance(self): #Need function to determine tree height
-        '''Check if every node is balanced or not by taking the difference \
-        of the left tree height and right tree height: \
-        bal(root) = leftChild.height() - rightChild.height() '''
-        pass
+    def height(self): # Used in the balance method
+        '''Find height of tree at node X'''
+        if self.leftChild == None:
+            leftHeight = -1 #So that the "1 +" cancels to 0 at end
+        else:
+            leftHeight = self.leftChild.height()
+        if self.rightChild == None:
+            rightHeight = -1
+        else:
+            rightHeight = self.rightChild.height()
+        return 1 + max(leftHeight, rightHeight)
     
     def balance(self, root): #Need to write this, probably using the preorder traverse method
+        '''Check if every node is balanced or not by taking the difference \
+        of the left tree height and right tree height: \
+        bal(root) = leftChild.height() - rightChild.height() 
+        and if not then re-sorts the tree to be balanced'''
         pass
     
     def rotation(tree, node, direction): #No idea so far
@@ -190,6 +196,8 @@ for i in range(len(values)):
         root = BinaryTree(values[i])
     else:
         root.insert(values[i])
+
+print(root.rightChild.height())
 
 #root.traverse("inorder")
 #root.visualize('roottest.gv')
