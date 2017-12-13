@@ -77,7 +77,6 @@ class BinaryTree:
         elif val > self.root:
             return self.rightChild.parent(val)
     
-    #TODO Finish delete function
     def delete(self, val):
         '''Deletes and redirects node using one of three cases'''
         if self.search(val) is None:
@@ -118,30 +117,33 @@ class BinaryTree:
     
     def traverse(self, order):
         '''Method to print values in tree depending on order requested'''
-        
+        keys = [] #Create empty list to append to
         if self.root != None: #Obv can't return value if None exists
             if order == "preorder":
-                print(self.root)
+                keys.append(self.root)
                 if self.leftChild:
-                    self.leftChild.traverse("preorder")
+                    #Don't want to restart list each time so use "keys +="
+                    keys += self.leftChild.traverse("preorder")
                 if self.rightChild:
-                    self.rightChild.traverse("preorder")
+                    keys += self.rightChild.traverse("preorder")
             elif order == "inorder":
                 if self.leftChild:
-                    self.leftChild.traverse("inorder")
-                print(self.root)
+                    keys += self.leftChild.traverse("inorder")
+                keys.append(self.root)
                 if self.rightChild:
-                    self.rightChild.traverse("inorder")
+                    keys += self.rightChild.traverse("inorder")
             elif order == "postorder":
                 if self.leftChild:
-                    self.leftChild.traverse("postorder")
+                    keys += self.leftChild.traverse("postorder")
                 if self.rightChild:
-                    self.rightChild.traverse("postorder")
-                print(self.root)
+                    keys += self.rightChild.traverse("postorder")
+                keys.append(self.root)
             else: #In case someone puts in wrong input
                 raise ValueError("Order must be either preorder, \
 inorder, or postorder!")
-    
+            
+            return keys
+            
     def buildEdges(self):
         '''Called to create list of nodes for arrows to be drawn between.
         Output is list and each set of 2 should be connected by an arrow'''
@@ -154,9 +156,7 @@ inorder, or postorder!")
         elif (self.leftChild is not None) and (self.rightChild is not None):
             return [self.root, self.leftChild.root, self.root, self.rightChild.root] \
                     + self.leftChild.buildEdges() + self.rightChild.buildEdges()
-    
-    #TODO Ensure arrows point correctly
-        # Maybe add /None/ leaf?
+
     def visualize(self, outputPath):
         '''Method that uses graphviz/Digraph to make a visual representation\
         of our BST. Arrow are constructed using the buildEdges method.'''
@@ -179,13 +179,44 @@ inorder, or postorder!")
         else:
             rightHeight = self.rightChild.height()
         return 1 + max(leftHeight, rightHeight)
-    
-    def balance(self, root): #Need to write this, probably using the preorder traverse method
+        
+    def order(self, ordered_list):
+        '''Takes list of ordered values and returns an order to make a balanced tree'''
+        balanced_order = [] #output list
+        mid = (len(ordered_list)//2) - 1
+        balanced_order.append(ordered_list.pop(mid))
+        
+        front = ordered_list[:mid] #Pop middle number from each side
+        end = ordered_list[mid:]
+        
+        mid = (len(front)//2) - 1 #redefine mid
+        while len(front) > 0:
+            balanced_order.append(front.pop(mid))
+            mid = (len(front)//2) - 1
+        
+        mid = (len(end)//2) - 1
+        while len(end) > 0:
+            balanced_order.append(end.pop(mid))
+            mid = (len(end)//2) - 1
+        
+        return balanced_order  
+
+    def balance(self): #Need to write this, probably using the preorder traverse method
         '''Check if every node is balanced or not by taking the difference \
-        of the left tree height and right tree height: \
-        bal(root) = leftChild.height() - rightChild.height() 
-        and if not then re-sorts the tree to be balanced'''
-        pass
+        of the left tree height and right tree height and if not then \
+        re-sorts the tree by taking the median of split lists'''
+        
+        balance = self.leftChild.height() - self.rightChild.height()
+        if balance < -1 or balance > 1:
+            ordered_values = self.traverse("inorder") #order the values
+            balanced_values = self.order(ordered_values) #Reorganize them for balance
+
+            for i in range(len(balanced_values)): #Build the new balanced tree
+                if i == 0:
+                    balanced_tree = BinaryTree(balanced_values[i])
+                else:
+                    balanced_tree.insert(balanced_values[i])
+        return balanced_tree
     
     def rotation(tree, node, direction): #No idea so far
         pass
@@ -197,7 +228,10 @@ for i in range(len(values)):
     else:
         root.insert(values[i])
 
-print(root.rightChild.height())
+bal = root.balance()
+
+#bal.visualize("bal.gv")
+
 
 #root.traverse("inorder")
 #root.visualize('roottest.gv')
