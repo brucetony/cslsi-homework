@@ -1,7 +1,5 @@
-# -*- coding: utf-8 -*-
 """
 Created on Sun Dec 10 14:01:40 2017
-
 @author: Bruce
 """
 
@@ -100,14 +98,14 @@ class BinaryTree:
             elif self.search(val).numChildren() == 1:
                 if self.search(val).root < self.parent(val).root:
                     if self.search(val).leftChild is None:
-                        self.parent(val).leftChild = self.search(val).rightChild
+                        self.parent(val).leftChild=self.search(val).rightChild
                     else:
                         self.parent(val).leftChild = self.search(val).leftChild
                 elif self.search(val).root > self.parent(val).root:
                     if self.search(val).leftChild is None:
-                        self.parent(val).rightChild = self.search(val).rightChild
+                        self.parent(val).rightChild=self.search(val).rightChild
                     else:
-                        self.parent(val).rightChild = self.search(val).leftChild
+                        self.parent(val).rightChild=self.search(val).leftChild
             
             #Case 3: Node has 2+ children
             elif self.search(val).numChildren() == 2:
@@ -120,6 +118,30 @@ class BinaryTree:
                     parent.leftChild = nextNode.rightChild
                 else:
                     parent.rightChild = nextNode.rightChild
+    
+    def traverse(self, order):
+        if self.root != None:
+            if order == "preorder":
+                print(self.root)
+                if self.leftChild:
+                    self.leftChild.traverse("preorder")
+                if self.rightChild:
+                    self.rightChild.traverse("preorder")
+            elif order == "inorder":
+                if self.leftChild:
+                    self.leftChild.traverse("inorder")
+                print(self.root)
+                if self.rightChild:
+                    self.rightChild.traverse("inorder")
+            elif order == "postorder":
+                if self.leftChild:
+                    self.leftChild.traverse("postorder")
+                if self.rightChild:
+                    self.rightChild.traverse("postorder")
+                print(self.root)
+            else:
+                raise ValueError("Order must be either preorder, \
+                                 inorder, or postorder!")
     
     def buildEdges(self):
         '''Called to create list of nodes for arrows to be drawn between.
@@ -153,5 +175,5 @@ for i in range(len(values)):
     else:
         root.insert(values[i])
 
-
+root.traverse("preorder")
 #root.visualize('roottest.gv')
