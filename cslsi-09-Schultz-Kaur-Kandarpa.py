@@ -201,7 +201,7 @@ inorder, or postorder!")
         
         return balanced_order  
 
-    def balance(self): #Need to write this, probably using the preorder traverse method
+    def balance(self):
         '''Check if every node is balanced or not by taking the difference \
         of the left tree height and right tree height and if not then \
         re-sorts the tree by taking the median of split lists'''
@@ -218,20 +218,22 @@ inorder, or postorder!")
                     balanced_tree.insert(balanced_values[i])
         return balanced_tree
     
-    def rotation(tree, node, direction): #No idea so far
-        pass
-    
+    def rotation(self, key, direction): #No idea so far
+        node = self.search(key)
+        if node is None:
+            raise ValueError("Must provide a key that is in the tree")
+        
+        if direction == "right":
+            pass
+        elif direction == "left":
+            pass
+        else:
+            raise ValueError("Must input either 'left' or 'right'")        
+
+
 values = [10, 5, 7, 1, 15, 3, 6, 9, 8, 11]
 for i in range(len(values)):
     if i == 0:
         root = BinaryTree(values[i])
     else:
         root.insert(values[i])
-
-bal = root.balance()
-
-#bal.visualize("bal.gv")
-
-
-#root.traverse("inorder")
-#root.visualize('roottest.gv')
