@@ -59,10 +59,8 @@ class noPathSet:
         self.rank[x] = 0
         
     def findSet(self, x):
-        if x != self.parent[x]:
-            # TODO modify findSet and remove path compression
-            # Running into recursion problem
-            self.parent[x] = self.findSet(self.parent[x])
+        while x != self.parent[x]:
+            x = self.parent[x]
         return self.parent[x]
     
     def union(self, x, y):
@@ -77,6 +75,33 @@ class noPathSet:
             self.parent[x] = y
             if self.rank[x] == self.rank[y]:
                 self.rank[y] += 1
+                
+class noPathNoRank:
+    """
+    Class that has set methods and uses union 
+    by rank and find with path compression
+    """
+     
+    def __init__(self):
+        self.parent = {} #Create dictionaries for set assignments
+        
+    def makeSet(self, x):
+        self.parent[x] = x #Create dict entry for new node x
+        
+    def findSet(self, x):
+        while x != self.parent[x]:
+            x = self.parent[x]
+        return self.parent[x]
+    
+    def union(self, x, y):
+        self.link(self.findSet(x), self.findSet(y))
+        
+    def link(self, x, y):
+        if x == y: #In case they are in the same set already
+            return
+        else:
+            self.parent[x] = y
+
 
 def time_set_func(set_class, it=10, num_sets=1000, num_op = 500000):
     times=[]
@@ -99,47 +124,13 @@ def time_set_func(set_class, it=10, num_sets=1000, num_op = 500000):
     times.append(avgTime)
     return times
                 
-#print(time_set_func(noPathSet))
-dset = pathRankSet()
-dset.makeSet('a')
-dset.makeSet('b')
-dset.union('a', 'b')
+print('With path compression and rank: {}'.format(time_set_func(pathRankSet)))
+print('No path compression: {}'.format(time_set_func(noPathSet)))
+print('No path compression and no rank: {}'.format(time_set_func(noPathNoRank)))
 
 ###############################################################################
 # Exercise 02
 ###############################################################################
-
-class pathRankSet:
-    """
-    Class that has set methods and uses union 
-    by rank and find with path compression
-    """
-     
-    def __init__(self):
-        self.parent = {} #Create dictionaries for set assignments
-        self.rank = {}
-        
-    def makeSet(self, x):
-        self.parent[x] = x #Create dict entry for new node x
-        self.rank[x] = 0
-        
-    def findSet(self, x):
-        if x != self.parent[x]:
-            self.parent[x] = self.findSet(self.parent[x])
-        return self.parent[x]
-    
-    def union(self, x, y):
-        self.link(self.findSet(x), self.findSet(y))
-        
-    def link(self, x, y):
-        if x == y: #In case they are in the same set already
-            return
-        elif self.rank[x] > self.rank[y]:
-            self.parent[y] = x
-        else:
-            self.parent[x] = y
-            if self.rank[x] == self.rank[y]:
-                self.rank[y] += 1
 
 class Graph:
     """
@@ -193,7 +184,7 @@ def mst(graph):
     for vertex in graph_nodes:
         assert vertex in connected_nodes #Check if graph is connected
     paths = [] #List of MST edges
-    node_set = pathRankSet() #Create set environment
+    node_set = pathRankSet() #Create set environment using class from e1
     for node in graph_nodes: #Convert nodes into sets
         node_set.makeSet(node)
     #Sort by weights (values in dict)
